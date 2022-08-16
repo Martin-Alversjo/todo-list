@@ -1,5 +1,4 @@
 import * as React from "react"
-import { TodosContextType } from "../@types/todo"
 
 interface ITodo {
   id: number
@@ -33,9 +32,9 @@ function todoReducer(state: State, action: Action) {
         todos: [
           ...state.todos,
           {
-            id: state.todos.length + 1,
+            id: action.payload.id,
             description: action.payload.description,
-            completed: false,
+            completed: action.payload.completed,
           },
         ],
       }
