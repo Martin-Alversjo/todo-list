@@ -8,7 +8,12 @@ const ViewTodos: React.FC = () => {
   return (
     <div>
       {state.todos.map((t) => (
-        <Todo description={t.description} completed={t.completed} />
+        <Todo
+          key={t.id}
+          id={t.id}
+          description={t.description}
+          completed={t.completed}
+        />
       ))}
     </div>
   )

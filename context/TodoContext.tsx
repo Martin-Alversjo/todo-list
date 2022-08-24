@@ -1,9 +1,17 @@
 import * as React from "react"
 
-interface ITodo {
+type ITodo = Readonly<{
   id: number
   description: string
   completed: boolean
+}>
+
+type notCompletedTodo = ITodo & {
+  readonly completed: false
+}
+
+type CompletedTodo = ITodo & {
+  readonly completed: true
 }
 
 enum TODO_ACTION {
@@ -25,7 +33,7 @@ const TodoStateContext = React.createContext<
   { state: State; dispatch: Dispatch } | undefined
 >(undefined)
 
-function todoReducer(state: State, action: Action) {
+function todoReducer(state: State, action: Action): State {
   switch (action.type) {
     case TODO_ACTION.ADD: {
       return {
@@ -50,11 +58,16 @@ function todoReducer(state: State, action: Action) {
       }
     }
     case TODO_ACTION.TOGGLE_COMPLETED: {
-      const newTodos = [...state.todos]
-      const todoIndex = newTodos.findIndex((t) => t.id === action.payload.id)
-      newTodos[todoIndex].completed = !newTodos[todoIndex].completed
+      const todos = [...state.todos]
+      const todoIndex = todos.findIndex((t) => t.id === action.payload.id)
+      const toggledCompletedTodo = {
+        id: action.payload.id,
+        description: action.payload.description,
+        completed: !todos[todoIndex].completed,
+      }
+      todos[todoIndex] = toggledCompletedTodo
       return {
-        todos: [...state.todos],
+        todos: todos,
       }
     }
     default: {
